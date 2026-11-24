@@ -1591,12 +1591,316 @@ button:disabled {
 .mt-20 { margin-top: 20px; }
 .mb-12 { margin-bottom: 12px; }
 .mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.hidden { display: none !important; }
 .flex-gap { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .flex-center-gap { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .cursor-pointer { cursor: pointer; }
 
+/* ==================== NEW UPGRADES: CONFETTI, TAP-WORD, HANDS-FREE, DIALOGUE, BADGES ==================== */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* Tap-to-Translate Words & Popover */
+.tap-word {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 1px 2px;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.tap-word:hover,
+.tap-word.active-tap {
+  background-color: var(--indigo-soft);
+  color: var(--indigo-ink);
+}
+
+.word-popover {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, calc(100vw - 24px));
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: 16px 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  z-index: 120;
+  animation: fadeUp 0.16s ease;
+}
+
+.wp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.wp-word {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.wp-meaning {
+  display: block;
+  font-size: 0.94rem;
+  color: var(--accent-ink);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.icon-btn-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface-subtle);
+  color: var(--ink-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.wp-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Hands-Free Shadowing Bar */
+.handsfree-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  margin-bottom: 14px;
+}
+
+.hf-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hf-info strong {
+  font-size: 0.9rem;
+  color: var(--accent-ink);
+}
+
+.sentence-item.hf-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* Speaking Modes & Conversation Simulator */
+.speak-mode-pill {
+  background: transparent;
+  border: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  cursor: pointer;
+}
+
+.speak-mode-pill.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.smode-pane {
+  display: none;
+}
+.smode-pane.active {
+  display: block;
+}
+
+.dialogue-chat-box {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  min-height: 280px;
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: 12px 15px;
+  border-radius: 16px;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  animation: fadeUp 0.18s ease;
+}
+
+.chat-bot {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-user {
+  align-self: flex-end;
+  background: var(--primary);
+  color: var(--primary-fg);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-sub-fr {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.dialogue-helper-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--indigo-soft);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.dialogue-controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* Daily Goal & Badges */
+.daily-goal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.goal-big-pill {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.goal-bar-track {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-subtle);
+  overflow: hidden;
+}
+
+.goal-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent), #34d399);
+  transition: width 0.4s ease;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.badge-card {
+  padding: 14px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  text-align: center;
+  opacity: 0.45;
+  filter: grayscale(1);
+  transition: all 0.2s ease;
+}
+
+.badge-card.unlocked {
+  opacity: 1;
+  filter: none;
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge-icon {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.badge-name {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.badge-desc {
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
 /* ==================== MOBILE-FIRST RESPONSIVE PERFECTION ==================== */
 @media (max-width: 768px) {
+  .hide-tiny {
+    display: none;
+  }
+
+  .word-popover {
+    bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .handsfree-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .handsfree-bar button {
+    width: 100%;
+  }
+
+  .studio-two-tabs {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .dialogue-controls {
+    flex-direction: column;
+  }
+
+  .dialogue-controls button {
+    width: 100%;
+  }
+
+  .badges-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   /* 1. Compact single-row Topbar + Native Bottom Navigation Bar */
   .topbar {
     height: 56px;

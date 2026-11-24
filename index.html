@@ -3,14 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f7f5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="SpeakFlow" />
   <title>SpeakFlow — Apprendre l'anglais pas à pas</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Celebration Confetti Canvas -->
+  <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Tap-to-Translate Instant Word Popover -->
+  <div id="word-popover" class="word-popover hidden" role="dialog" aria-label="Traduction du mot">
+    <div class="wp-top">
+      <div>
+        <span id="wp-word" class="wp-word"></span>
+        <span id="wp-meaning" class="wp-meaning"></span>
+      </div>
+      <button id="wp-close" class="icon-btn-sm" aria-label="Fermer">✕</button>
+    </div>
+    <div class="wp-actions">
+      <button id="wp-listen" class="audio-pill">🔊 Réécouter</button>
+      <button id="wp-slow" class="audio-pill">🐢 Lent</button>
+      <button id="wp-star" class="audio-pill">☆ Favori</button>
+    </div>
+  </div>
+
   <!-- Slide-Over Drawer Overlay for the 64 Blocks -->
   <div id="drawer-backdrop" class="drawer-backdrop"></div>
   <aside id="blocks-drawer" class="blocks-drawer" aria-label="Liste des 64 blocs">
@@ -39,7 +64,7 @@
     <div id="blocks-list" class="drawer-list"></div>
   </aside>
 
-  <!-- Minimalist Floating Top Navigation (Apple / Notion / Babbel inspired) -->
+  <!-- Minimalist Floating Top Navigation -->
   <header class="topbar">
     <div class="topbar-left">
       <button id="btn-open-drawer" class="drawer-trigger" title="Choisir un bloc parmi les 64">
@@ -57,7 +82,7 @@
       </button>
       <button class="nav-pill" data-view="daniel">
         <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-        <span>Studio 5m</span>
+        <span>Parler</span>
       </button>
       <button class="nav-pill" data-view="flashcards">
         <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M8 10h8M8 14h5"/></svg>
@@ -70,6 +95,9 @@
     </nav>
 
     <div class="topbar-right">
+      <div class="metric-chip hide-tiny" title="Objectif quotidien : 10 min">
+        ⏱ <span id="stat-mins">0/10m</span>
+      </div>
       <div class="metric-chip" title="Jours consécutifs">
         <span class="dot-amber"></span>
         <span id="stat-streak">1</span>j
@@ -81,7 +109,7 @@
         <span id="stat-blocks">0/64</span>
       </div>
       <button id="btn-theme-toggle" class="icon-btn" title="Mode clair / doux sombre">
-        <svg id="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
       </button>
     </div>
   </header>
@@ -91,10 +119,9 @@
     <div id="global-progress-fill" class="progress-hairline-fill" style="width: 0%"></div>
   </div>
 
-  <!-- ==================== VIEW 1: GUIDED LESSON FLOW (ONE STEP AT A TIME) ==================== -->
+  <!-- ==================== VIEW 1: GUIDED LESSON FLOW ==================== -->
   <main id="view-parcours" class="view active">
     <div class="focus-shell">
-      <!-- Lesson Header -->
       <div class="lesson-header">
         <div>
           <p id="current-chapter-badge" class="eyebrow">Chapitre 1</p>
@@ -112,7 +139,6 @@
         </div>
       </div>
 
-      <!-- Clean 4-Step Stepper -->
       <div class="stepper" role="tablist">
         <button class="step-item active" data-step="1">
           <span class="step-num">1</span>
@@ -135,7 +161,7 @@
         </button>
       </div>
 
-      <!-- STEP 1: LISTEN & READ -->
+      <!-- STEP 1: LISTEN, TAP WORDS & HANDS-FREE SHADOWING -->
       <section id="lesson-step-1" class="step-panel active">
         <div class="surface-card video-surface">
           <div class="youtube-frame">
@@ -165,7 +191,7 @@
           <div class="card-head">
             <div>
               <h2 class="section-heading">Phrase par phrase</h2>
-              <p class="caption">Clique sur l'icône audio d'une phrase pour l'écouter seule et la répéter à voix haute.</p>
+              <p class="caption">💡 Touche n'importe quel mot anglais pour voir sa traduction et l'écouter.</p>
             </div>
             <div class="segmented-small">
               <button class="sub-pill active" data-submode="dual">Bilingue</button>
@@ -173,6 +199,15 @@
               <button class="sub-pill" data-submode="fr">Traduction</button>
               <button class="sub-pill" data-submode="blur">Écoute pure</button>
             </div>
+          </div>
+
+          <!-- Hands-Free Automatic Shadowing Coach Bar -->
+          <div class="handsfree-bar">
+            <div class="hf-info">
+              <strong>🎧 Shadowing Mains-Libres</strong>
+              <span id="hf-status-text" class="caption">Écoute lente → Pause pour répéter → Vitesse normale, phrase après phrase.</span>
+            </div>
+            <button id="btn-handsfree-toggle" class="btn-emerald btn-compact">▶ Lancer</button>
           </div>
 
           <div id="sentences-container" class="clean-sentences"></div>
@@ -218,7 +253,7 @@
         </div>
       </section>
 
-      <!-- STEP 3: INTERACTIVE EXERCISES (1 FOCUSED DRILL AT A TIME) -->
+      <!-- STEP 3: INTERACTIVE EXERCISES -->
       <section id="lesson-step-3" class="step-panel">
         <div class="surface-card exo-stage-card">
           <div class="exo-top-nav">
@@ -231,7 +266,6 @@
             </div>
           </div>
 
-          <!-- Drill 1: Sentence Builder -->
           <div id="exo-puzzle" class="drill-pane active">
             <h2 class="drill-title">Reconstruis cette phrase en anglais</h2>
             <div class="prompt-card">
@@ -240,12 +274,9 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               </button>
             </div>
-
             <div id="puzzle-answer-zone" class="tile-tray tray-answer"></div>
             <div id="puzzle-word-bank" class="tile-tray tray-bank"></div>
-
             <div id="puzzle-feedback" class="feedback-banner hidden"></div>
-
             <div class="drill-actions">
               <button id="btn-reset-puzzle" class="btn-subtle">Recommencer</button>
               <div class="flex-gap">
@@ -255,73 +286,57 @@
             </div>
           </div>
 
-          <!-- Drill 2: Cloze -->
           <div id="exo-cloze" class="drill-pane">
             <h2 class="drill-title">Complète le mot manquant</h2>
             <div class="prompt-card">
               <p id="cloze-fr-hint" class="prompt-fr"></p>
             </div>
-
             <div id="cloze-sentence-display" class="cloze-box"></div>
             <div id="cloze-options" class="choices-grid"></div>
-
             <div class="inline-input-group">
               <input type="text" id="cloze-input" class="clean-input" placeholder="Ou tape le mot directement au clavier..." autocomplete="off" />
               <button id="btn-check-cloze" class="btn-primary">Valider</button>
             </div>
-
             <div id="cloze-feedback" class="feedback-banner hidden"></div>
-
             <div class="drill-actions">
               <button class="btn-subtle btn-switch-exo" data-nextexo="puzzle">← Précédent</button>
               <button class="btn-outline-dark btn-switch-exo" data-nextexo="pronounce">Exercice suivant →</button>
             </div>
           </div>
 
-          <!-- Drill 3: Mouth & Voice Comparison (Speechling + ELSA style) -->
           <div id="exo-pronounce" class="drill-pane">
             <h2 class="drill-title">Entraîne ta bouche et compare ta voix</h2>
             <p class="caption mb-16">Écoute le modèle, puis parle à voix haute pour analyser ta prononciation ou comparer ton enregistrement.</p>
-
             <select id="pronounce-sentence-select" class="clean-select mb-16"></select>
-
             <div class="mouth-box">
               <div id="pronounce-target-words" class="mouth-words"></div>
-
               <div class="mouth-actions">
                 <button id="btn-pronounce-listen-normal" class="btn-chip">🔊 Voix modèle</button>
                 <button id="btn-pronounce-listen-slow" class="btn-chip">🐢 Ralenti (0.7×)</button>
                 <button id="btn-pronounce-mic" class="btn-primary">🎙️ Tester ma prononciation</button>
                 <button id="btn-compare-record" class="btn-outline-dark">🎧 M'enregistrer &amp; Comparer</button>
               </div>
-
               <p id="pronounce-live-transcript" class="live-caption"></p>
               <div id="compare-player-row" class="compare-row hidden">
                 <button id="btn-play-both" class="btn-chip">▶ Écouter Modèle puis Moi</button>
                 <audio id="compare-audio-el" controls></audio>
               </div>
             </div>
-
             <div id="pronounce-score-box" class="feedback-banner hidden"></div>
-
             <div class="drill-actions">
               <button class="btn-subtle btn-switch-exo" data-nextexo="cloze">← Précédent</button>
               <button class="btn-outline-dark btn-switch-exo" data-nextexo="personal">Exercice suivant →</button>
             </div>
           </div>
 
-          <!-- Drill 4: Personal Sentence -->
           <div id="exo-personal" class="drill-pane">
             <h2 class="drill-title">Crée ta propre phrase</h2>
             <div class="prompt-card prompt-vertical">
               <p id="personal-hint-text" class="prompt-fr"></p>
               <p class="caption">Structure suggérée : <code id="personal-template-code"></code></p>
             </div>
-
             <textarea id="personal-textarea" class="clean-textarea" rows="3" placeholder="Écris ta phrase en anglais ici, puis lis-la à voix haute..."></textarea>
-
             <div id="personal-feedback" class="feedback-banner hidden"></div>
-
             <div class="drill-actions">
               <button id="btn-speak-personal" class="btn-chip">🔊 Écouter ma phrase</button>
               <div class="flex-gap">
@@ -329,7 +344,6 @@
                 <button class="btn-outline-dark btn-go-step" data-target="4">Terminer →</button>
               </div>
             </div>
-
             <div id="personal-journal-wrap" class="journal-clean mt-20">
               <h3 class="caption-bold">Mes dernières phrases personnelles</h3>
               <div id="personal-journal-list" class="journal-items"></div>
@@ -343,7 +357,7 @@
         </div>
       </section>
 
-      <!-- STEP 4: VALIDATION & NEXT BLOCK -->
+      <!-- STEP 4: VALIDATION -->
       <section id="lesson-step-4" class="step-panel">
         <div class="surface-card completion-card">
           <div class="completion-check">✓</div>
@@ -351,7 +365,6 @@
           <p class="caption max-460">
             Rappelle-toi la règle d'or du discours : tu n'as pas besoin d'être parfait, tu as juste besoin d'avoir parlé à voix haute aujourd'hui.
           </p>
-
           <div class="completion-buttons">
             <button id="btn-mark-done" class="btn-emerald btn-large">
               Valider ce bloc (+25 XP)
@@ -361,7 +374,6 @@
             </button>
           </div>
         </div>
-
         <div class="step-footer">
           <button class="btn-subtle btn-go-step" data-target="3">← Revenir aux exercices</button>
           <span></span>
@@ -370,69 +382,104 @@
     </div>
   </main>
 
-  <!-- ==================== VIEW 2: DANIEL'S 5-MINUTE VOICE STUDIO ==================== -->
+  <!-- ==================== VIEW 2: SPEAKING STUDIO & CONVERSATION PARTNER ==================== -->
   <main id="view-daniel" class="view">
     <div class="focus-shell">
-      <div class="page-intro">
-        <p class="eyebrow">Inspiré de l'histoire de Daniel · 12:30 – 16:00</p>
-        <h1 class="lesson-title">Studio d'expression libre</h1>
-        <p class="caption">Parle à ton téléphone ou ton ordinateur sans rien écrire à l'avance, puis réécoute-toi sans te juger.</p>
+      <div class="page-intro flex-between">
+        <div>
+          <p class="eyebrow">Entraînement oral quotidien</p>
+          <h1 class="lesson-title">Studio Vocal &amp; Conversation</h1>
+        </div>
+        <div class="segmented-small studio-two-tabs">
+          <button class="speak-mode-pill active" data-smode="monologue">🎙️ Monologue 5m (J1–10)</button>
+          <button class="speak-mode-pill" data-smode="dialogue">💬 Dialogue Vocal (J21–30)</button>
+        </div>
       </div>
 
-      <div class="surface-card studio-center-card">
-        <div class="segmented-small center-seg">
-          <button class="preset-btn" data-seconds="120">2 min · Bilan du soir</button>
-          <button class="preset-btn active" data-seconds="300">5 min · Routine Daniel</button>
-          <button class="preset-btn" data-seconds="600">10 min · Matin</button>
-        </div>
-
-        <div class="topic-clean-box">
-          <div class="topic-clean-top">
-            <span class="eyebrow">Sujet proposé</span>
-            <button id="btn-random-topic" class="text-btn">Changer de sujet ↻</button>
+      <!-- Mode A: Daniel's 5-min Monologue -->
+      <div id="smode-monologue" class="smode-pane active">
+        <div class="surface-card studio-center-card">
+          <div class="segmented-small center-seg">
+            <button class="preset-btn" data-seconds="120">2 min · Soir</button>
+            <button class="preset-btn active" data-seconds="300">5 min · Daniel</button>
+            <button class="preset-btn" data-seconds="600">10 min · Matin</button>
           </div>
-          <p id="daniel-topic-en" class="topic-quote">"What did I do today, and what made me happy today?"</p>
-          <p id="daniel-topic-fr" class="caption">Qu'est-ce que j'ai fait aujourd'hui, et qu'est-ce qui m'a rendu heureux ?</p>
+
+          <div class="topic-clean-box">
+            <div class="topic-clean-top">
+              <span class="eyebrow">Sujet proposé</span>
+              <button id="btn-random-topic" class="text-btn">Changer de sujet ↻</button>
+            </div>
+            <p id="daniel-topic-en" class="topic-quote">"What did I do today, and what made me happy today?"</p>
+            <p id="daniel-topic-fr" class="caption">Qu'est-ce que j'ai fait aujourd'hui, et qu'est-ce qui m'a rendu heureux ?</p>
+          </div>
+
+          <div id="daniel-timer" class="clean-timer">05:00</div>
+          <canvas id="audio-visualizer" width="520" height="56"></canvas>
+
+          <div class="flex-center-gap">
+            <button id="btn-start-record" class="btn-primary btn-large">Démarrer l'enregistrement</button>
+            <button id="btn-stop-record" class="btn-outline-dark btn-large" disabled>Arrêter</button>
+          </div>
+          <p id="recorder-status" class="caption mt-12">Autorise le microphone quand ton navigateur te le demande.</p>
         </div>
 
-        <div id="daniel-timer" class="clean-timer">05:00</div>
-        <canvas id="audio-visualizer" width="520" height="56"></canvas>
+        <div class="two-col-clean mt-20">
+          <div class="surface-card">
+            <h3 class="section-heading mb-12">Phrases anti-blocage</h3>
+            <p class="caption mb-12">Clique pour écouter quoi dire si tu cherches tes mots :</p>
+            <div class="phrase-pills-stack">
+              <button class="phrase-helper" data-say="Let me think for a second.">
+                <strong>Let me think for a second...</strong>
+                <span>Laisse-moi réfléchir une seconde</span>
+              </button>
+              <button class="phrase-helper" data-say="How can I say this simply?">
+                <strong>How can I say this simply?</strong>
+                <span>Comment dire ça simplement ?</span>
+              </button>
+              <button class="phrase-helper" data-say="It is the thing you use when it rains.">
+                <strong>It's the thing you use when...</strong>
+                <span>Expliquer un mot oublié (astuce parapluie)</span>
+              </button>
+              <button class="phrase-helper" data-say="What I mean is...">
+                <strong>What I mean is...</strong>
+                <span>Ce que je veux dire, c'est...</span>
+              </button>
+            </div>
+          </div>
 
-        <div class="flex-center-gap">
-          <button id="btn-start-record" class="btn-primary btn-large">Démarrer l'enregistrement</button>
-          <button id="btn-stop-record" class="btn-outline-dark btn-large" disabled>Arrêter</button>
+          <div class="surface-card">
+            <h3 class="section-heading mb-12">Mes prises vocales</h3>
+            <div id="recordings-list" class="clean-recordings">
+              <p class="caption">Tes enregistrements de la séance apparaîtront ici pour pouvoir te réécouter.</p>
+            </div>
+          </div>
         </div>
-        <p id="recorder-status" class="caption mt-12">Autorise le microphone quand ton navigateur te le demande.</p>
       </div>
 
-      <div class="two-col-clean mt-20">
+      <!-- Mode B: Interactive Conversation Partner (Days 21-30) -->
+      <div id="smode-dialogue" class="smode-pane">
         <div class="surface-card">
-          <h3 class="section-heading mb-12">Phrases anti-blocage</h3>
-          <p class="caption mb-12">Clique pour écouter quoi dire si tu cherches tes mots :</p>
-          <div class="phrase-pills-stack">
-            <button class="phrase-helper" data-say="Let me think for a second.">
-              <strong>Let me think for a second...</strong>
-              <span>Laisse-moi réfléchir une seconde</span>
-            </button>
-            <button class="phrase-helper" data-say="How can I say this simply?">
-              <strong>How can I say this simply?</strong>
-              <span>Comment dire ça simplement ?</span>
-            </button>
-            <button class="phrase-helper" data-say="It is the thing you use when it rains.">
-              <strong>It's the thing you use when...</strong>
-              <span>Expliquer un mot oublié (astuce parapluie)</span>
-            </button>
-            <button class="phrase-helper" data-say="What I mean is...">
-              <strong>What I mean is...</strong>
-              <span>Ce que je veux dire, c'est...</span>
-            </button>
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">Phase 3 · Parler avec un partenaire</span>
+              <h2 class="section-heading">Simulateur de Conversation Vocale</h2>
+              <p class="caption">Ton partenaire te pose des questions à l'oral. Réponds au micro ou à l'écrit sans viser la perfection !</p>
+            </div>
+            <select id="dialogue-select" class="clean-select auto-w"></select>
           </div>
-        </div>
 
-        <div class="surface-card">
-          <h3 class="section-heading mb-12">Mes prises vocales</h3>
-          <div id="recordings-list" class="clean-recordings">
-            <p class="caption">Tes enregistrements de la séance apparaîtront ici pour pouvoir te réécouter.</p>
+          <div id="dialogue-chat-box" class="dialogue-chat-box"></div>
+
+          <div id="dialogue-helper-box" class="dialogue-helper-box">
+            <span class="caption">💡 Idée de réponse simple : <strong id="dialogue-sample-text"></strong></span>
+            <button id="btn-listen-sample" class="audio-pill">🔊 Écouter l'exemple</button>
+          </div>
+
+          <div class="dialogue-controls">
+            <button id="btn-dialogue-mic" class="btn-emerald">🎙️ Répondre à l'oral</button>
+            <input type="text" id="dialogue-input" class="clean-input" placeholder="Ou écris ta réponse en anglais..." autocomplete="off" />
+            <button id="btn-dialogue-send" class="btn-primary">Envoyer</button>
           </div>
         </div>
       </div>
@@ -454,7 +501,6 @@
         </div>
       </div>
 
-      <!-- Subview A: Clean Flashcards -->
       <div id="vmode-cards" class="vmode-pane active">
         <div class="fc-toolbar">
           <select id="fc-deck-filter" class="clean-select auto-w">
@@ -496,20 +542,16 @@
         </div>
       </div>
 
-      <!-- Subview B: Dictation -->
       <div id="vmode-dictation" class="vmode-pane">
         <div class="surface-card">
           <h2 class="drill-title">Dictée à l'oreille</h2>
           <p class="caption mb-16">Écoute une phrase du discours sans lire le texte, puis écris ce que tu entends.</p>
-
           <div class="flex-gap mb-16">
             <button id="btn-dictation-play" class="btn-primary">🔊 Écouter la phrase</button>
             <button id="btn-dictation-slow" class="btn-chip">🐢 Ralenti</button>
             <button id="btn-dictation-new" class="btn-subtle">Autre phrase ↻</button>
           </div>
-
           <input type="text" id="dictation-input" class="clean-input mb-12" placeholder="Écris la phrase entendue en anglais..." autocomplete="off" />
-
           <div class="flex-gap">
             <button id="btn-dictation-check" class="btn-primary">Vérifier</button>
             <button id="btn-dictation-reveal" class="btn-subtle">Afficher la réponse</button>
@@ -518,7 +560,6 @@
         </div>
       </div>
 
-      <!-- Subview C: False Friends -->
       <div id="vmode-traps" class="vmode-pane">
         <div class="surface-card">
           <span class="eyebrow">Spécial francophones</span>
@@ -533,22 +574,52 @@
     </div>
   </main>
 
-  <!-- ==================== VIEW 4: 30-DAY PLAN & SOUND GUIDE ==================== -->
+  <!-- ==================== VIEW 4: 30-DAY PLAN, DAILY GOAL, BADGES & PWA ==================== -->
   <main id="view-plan" class="view">
     <div class="focus-shell">
       <div class="page-intro flex-between">
         <div>
           <p class="eyebrow">Régularité &gt; Perfection</p>
-          <h1 class="lesson-title">Mon calendrier de 30 jours</h1>
+          <h1 class="lesson-title">Mon Espace 30 Jours</h1>
         </div>
         <div class="flex-gap">
-          <button id="btn-export-progress" class="btn-chip">Exporter sauvegarde</button>
+          <button id="btn-install-pwa" class="btn-emerald btn-compact hidden">📲 Installer sur mon téléphone</button>
+          <button id="btn-export-progress" class="btn-chip">Sauvegarder</button>
           <label class="btn-chip cursor-pointer">
             Importer <input type="file" id="input-import-progress" accept=".json" hidden />
           </label>
         </div>
       </div>
 
+      <!-- Daily 10-Min Goal + PWA Offline Banner -->
+      <div class="surface-card mb-20">
+        <div class="daily-goal-row">
+          <div>
+            <span class="eyebrow">Objectif du jour</span>
+            <h2 class="section-heading">Pratiquer 10 minutes aujourd'hui</h2>
+            <p id="daily-goal-caption" class="caption">0 min effectuée aujourd'hui · Mode hors-ligne activé ✓</p>
+          </div>
+          <div id="daily-goal-badge" class="goal-big-pill">0 / 10 min</div>
+        </div>
+        <div class="goal-bar-track mt-12">
+          <div id="daily-goal-fill" class="goal-bar-fill" style="width: 0%"></div>
+        </div>
+        <p class="caption mt-12">📱 <strong>Astuce mobile :</strong> Dans le menu de ton navigateur (Chrome ou Safari → <em>Partager</em>), choisis <strong>« Ajouter à l'écran d'accueil »</strong> pour utiliser SpeakFlow en plein écran même sans connexion !</p>
+      </div>
+
+      <!-- Badges / Trophies Showcase -->
+      <div class="surface-card mb-20">
+        <div class="card-head mb-12">
+          <div>
+            <span class="eyebrow">Motivation</span>
+            <h2 class="section-heading">Mes Trophées débloqués</h2>
+          </div>
+          <span id="badges-count-chip" class="metric-chip">0 / 8</span>
+        </div>
+        <div id="badges-grid" class="badges-grid"></div>
+      </div>
+
+      <!-- 30-Day Checkboxes -->
       <div class="surface-card">
         <div class="phase-section">
           <div class="phase-head">
@@ -563,7 +634,7 @@
         <div class="phase-section">
           <div class="phase-head">
             <h3>Jours 11 – 20 · Shadowing (Écouter, Pause, Copier)</h3>
-            <span class="caption">20 min d'imitation vocale par jour avec les blocs vidéo</span>
+            <span class="caption">20 min d'imitation vocale par jour avec les blocs vidéo ou mains-libres</span>
           </div>
           <div id="days-grid-2" class="clean-days-grid"></div>
         </div>
@@ -573,12 +644,13 @@
         <div class="phase-section">
           <div class="phase-head">
             <h3>Jours 21 – 30 · Conversation réelle</h3>
-            <span class="caption">15 à 20 min par jour avec un partenaire d'apprentissage</span>
+            <span class="caption">15 à 20 min par jour avec un partenaire ou le Simulateur Vocal</span>
           </div>
           <div id="days-grid-3" class="clean-days-grid"></div>
         </div>
       </div>
 
+      <!-- Sound Gym -->
       <div class="surface-card mt-20">
         <h2 class="section-heading mb-12">Guide rapide des 4 sons anglais pour ta bouche</h2>
         <div class="clean-sounds-grid">
@@ -628,6 +700,7 @@
   </main>
 
   <script src="data.js"></script>
+  <script src="dictionary.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
