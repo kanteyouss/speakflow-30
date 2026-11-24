@@ -2,7 +2,7 @@
 <html lang="fr" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>SpeakFlow — Apprendre l'anglais pas à pas</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,10 +51,22 @@
     </div>
 
     <nav class="segmented-nav" role="tablist">
-      <button class="nav-pill active" data-view="parcours">Parcours</button>
-      <button class="nav-pill" data-view="daniel">Studio 5 min</button>
-      <button class="nav-pill" data-view="flashcards">Vocabulaire</button>
-      <button class="nav-pill" data-view="plan">Plan 30 jours</button>
+      <button class="nav-pill active" data-view="parcours">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Parcours</span>
+      </button>
+      <button class="nav-pill" data-view="daniel">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+        <span>Studio 5m</span>
+      </button>
+      <button class="nav-pill" data-view="flashcards">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M8 10h8M8 14h5"/></svg>
+        <span>Vocabulaire</span>
+      </button>
+      <button class="nav-pill" data-view="plan">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Plan 30J</span>
+      </button>
     </nav>
 
     <div class="topbar-right">
@@ -104,17 +116,17 @@
       <div class="stepper" role="tablist">
         <button class="step-item active" data-step="1">
           <span class="step-num">1</span>
-          <span class="step-label">Écouter &amp; Lire</span>
+          <span class="step-label"><span class="hide-xs">Écouter &amp; </span>Lire</span>
         </button>
         <div class="step-line"></div>
         <button class="step-item" data-step="2">
           <span class="step-num">2</span>
-          <span class="step-label">Clés &amp; Grammaire</span>
+          <span class="step-label">Clés<span class="hide-xs"> &amp; Grammaire</span></span>
         </button>
         <div class="step-line"></div>
         <button class="step-item" data-step="3">
           <span class="step-num">3</span>
-          <span class="step-label">Pratiquer</span>
+          <span class="step-label">Exercices</span>
         </button>
         <div class="step-line"></div>
         <button class="step-item" data-step="4">

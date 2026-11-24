@@ -58,6 +58,11 @@ html[data-theme="dark"] {
   padding: 0;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg);
@@ -145,9 +150,13 @@ code {
 }
 
 .nav-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   background: transparent;
   border: none;
-  padding: 6px 16px;
+  padding: 6px 15px;
   border-radius: var(--radius-pill);
   font-family: inherit;
   font-size: 0.85rem;
@@ -155,6 +164,12 @@ code {
   color: var(--ink-secondary);
   cursor: pointer;
   transition: all 0.18s ease;
+}
+
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .nav-pill:hover {
@@ -1580,30 +1595,447 @@ button:disabled {
 .flex-center-gap { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .cursor-pointer { cursor: pointer; }
 
-@media (max-width: 760px) {
+/* ==================== MOBILE-FIRST RESPONSIVE PERFECTION ==================== */
+@media (max-width: 768px) {
+  /* 1. Compact single-row Topbar + Native Bottom Navigation Bar */
   .topbar {
-    height: auto;
-    padding: 12px 16px;
-    flex-wrap: wrap;
+    height: 56px;
+    padding: 0 12px;
+    flex-wrap: nowrap;
+    gap: 8px;
   }
+
+  .brand-divider,
+  .brand-name {
+    display: none;
+  }
+
+  .drawer-trigger {
+    padding: 6px 11px;
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+
+  .topbar-right {
+    gap: 5px;
+  }
+
+  .metric-chip {
+    padding: 4px 8px;
+    font-size: 0.74rem;
+    gap: 4px;
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Native iOS / Android Bottom Tab Bar */
   .segmented-nav {
-    order: 3;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 80;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: none;
+    border-top: 1px solid var(--border-strong);
+    border-radius: 0;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+  }
+
+  .nav-pill {
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .nav-pill.active {
+    background: var(--indigo-soft);
+    color: var(--indigo-ink);
+    box-shadow: none;
+  }
+
+  /* 2. Main container spacing (extra bottom space for bottom bar) */
+  .focus-shell {
+    margin: 16px auto 0;
+    padding: 0 12px calc(98px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .lesson-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .lesson-title {
+    font-size: 1.32rem;
+  }
+
+  .lesson-arrows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
     width: 100%;
+  }
+
+  .lesson-arrows .btn-subtle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+    font-size: 0.84rem;
+  }
+
+  .page-intro.flex-between {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  /* 3. 4-Column Stepper without horizontal scroll */
+  .hide-xs {
+    display: none;
+  }
+
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 6px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+    overflow: visible;
+  }
+
+  .step-line {
+    display: none;
+  }
+
+  .step-item {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 7px 4px;
+    border-radius: 10px;
+    font-size: 0.73rem;
+    text-align: center;
+  }
+
+  .step-item.active {
+    background: var(--surface-subtle);
+  }
+
+  /* 4. Cards & Video Player */
+  .surface-card {
+    padding: 16px 14px;
+    border-radius: 16px;
+  }
+
+  .video-surface {
+    padding: 10px;
+  }
+
+  .video-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 2px 2px;
+  }
+
+  .video-bar-left {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 8px;
+  }
+
+  .video-bar-right {
     justify-content: space-between;
   }
-  .nav-pill {
+
+  /* 5. Segmented sub-controls fit cleanly */
+  .card-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .card-head .segmented-small,
+  .page-intro .segmented-small,
+  .center-seg {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .page-intro .segmented-small,
+  .center-seg {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sub-pill,
+  .preset-btn,
+  .vocab-mode-pill {
+    padding: 8px 6px;
+    font-size: 0.76rem;
+    border-radius: 8px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* 6. Full-width Sentence Rows & Vocabulary Rows */
+  .sentence-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 13px 14px;
+  }
+
+  .sent-en-clean {
+    font-size: 0.98rem;
+    line-height: 1.45;
+  }
+
+  .sent-fr-clean {
+    font-size: 0.88rem;
+    margin-top: 4px;
+  }
+
+  .sent-btns {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .sent-btns .audio-pill {
     flex: 1;
     text-align: center;
-    padding: 6px 8px;
-    font-size: 0.78rem;
+    padding: 8px 10px;
+    font-size: 0.8rem;
   }
-  .two-col-clean, .clean-sounds-grid, .choices-grid {
+
+  .vocab-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .vocab-tip-note {
+    width: 100%;
+    line-height: 1.4;
+  }
+
+  .vocab-row-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .icon-action-btn {
+    justify-content: center;
+    width: 100%;
+    height: 38px;
+  }
+
+  .grammar-rule-card {
+    padding: 14px;
+  }
+
+  .grammar-ex-chip {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+  }
+
+  /* 7. Exercises & Touch Ergonomics */
+  .exo-top-nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .exo-dots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .exo-dot {
+    text-align: center;
+    padding: 8px 6px;
+    font-size: 0.76rem;
+  }
+
+  .drill-title {
+    font-size: 1.1rem;
+  }
+
+  .prompt-card {
+    padding: 13px 14px;
+  }
+
+  .prompt-fr {
+    font-size: 0.95rem;
+  }
+
+  .word-chip {
+    padding: 8px 12px;
+    font-size: 0.88rem;
+  }
+
+  /* 16px prevents iOS Safari auto-zoom on focus! */
+  .clean-input,
+  .clean-textarea,
+  .clean-select,
+  .search-input-wrap input {
+    font-size: 16px;
+  }
+
+  .inline-input-group {
+    flex-direction: column;
+  }
+
+  .inline-input-group .btn-primary {
+    width: 100%;
+  }
+
+  .mouth-box {
+    padding: 16px 12px;
+  }
+
+  .mouth-words {
+    font-size: 1.06rem;
+    gap: 6px;
+  }
+
+  .mouth-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .mouth-actions #btn-pronounce-mic,
+  .mouth-actions #btn-compare-record {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .drill-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .drill-actions .flex-gap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .drill-actions button {
+    width: 100%;
+  }
+
+  .step-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .step-footer button {
+    width: 100%;
+  }
+
+  .step-footer > span:empty {
+    display: none;
+  }
+
+  /* 8. Studio 5 min, Flashcards & 30-Day Grid */
+  .clean-timer {
+    font-size: 2.6rem;
+  }
+
+  .flex-center-gap {
+    flex-direction: column;
+  }
+
+  .flex-center-gap button {
+    width: 100%;
+  }
+
+  .two-col-clean,
+  .clean-sounds-grid,
+  .choices-grid {
     grid-template-columns: 1fr;
   }
+
+  .fc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .auto-w {
+    width: 100%;
+  }
+
+  .clean-flashcard {
+    min-height: 250px;
+    padding: 28px 18px;
+  }
+
+  .fc-main-text {
+    font-size: 1.35rem;
+  }
+
+  .fc-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .btn-rate {
+    width: 100%;
+  }
+
   .clean-days-grid {
     grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
   }
-  .surface-card {
-    padding: 18px;
+
+  .completion-card {
+    padding: 32px 18px;
+  }
+
+  .completion-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .completion-buttons button {
+    width: 100%;
   }
 }
