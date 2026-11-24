@@ -1,0 +1,10 @@
+{
+  "name": "speakflow-30",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SpeakFlow 30 — Apprendre l'anglais pas à pas (Méthode Jack Ma)",
+  "scripts": {
+    "start": "python3 -m http.server 8090",
+    "deploy": "npx vercel --prod"
+  }
+}
